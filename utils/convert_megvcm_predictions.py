@@ -29,31 +29,33 @@ label_mapping = {
 }
 
 def aggregate_labels(labels):
-    # If a segment contains a canonical syllable, we return CNS
+    # Count occurrences of each label
+    counts = Counter(labels)
+    total_labels = len(labels)
+
+    # If majority are Junk, return Junk
+    if counts.get('J', 0) > total_labels / 2:
+        return 'J'
+
+    # If any Canonical judgment is present, return Canonical
     if 'C' in labels:
         return 'C'
 
-    # We're sure that the segment does not contain any CNS
-    # If it contains NCS, we return NCS
+    # If any Noncanonical judgment is present, return Noncanonical
     if 'N' in labels:
         return 'N'
 
-    # We're sure that the segment does not contain any CNS or NCS
-    # We use majority voting
-    counts = Counter(labels)
-    max_count = counts.most_common(1)[0][1]
-    tied_labels = [label for label, count in counts.items() if count == max_count]
+    # If any Crying judgment is present, return Crying
+    if 'Y' in labels:
+        return 'Y'
 
-    # If there's a tie, use priority order: CRY > LAU > JUN
-    tiebreaker_order = ['Y', 'L', 'J']
-    for label in tiebreaker_order:
-        if label in tied_labels:
-            return label
+    # Otherwise, return Laughing
+    return 'L'
 
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Convert CSV files to JSON format for Meg's VM")
+    parser = argparse.ArgumentParser(description="Convert CSV files to JSON format for Meg's VCM")
     parser.add_argument('--predictions', required=True, help='Path to the .csv file containing predictions for the 500-ms chunks.')
     parser.add_argument('--chunks', required=True, help='Path to the child-project generated file which contains information about how segments have been cut.')
     parser.add_argument('--project', required=True, help='Path to ChildProject project (neurogen).')
@@ -102,7 +104,7 @@ def main():
     # Aggregate 500-ms clips to have a single predicted_label per clip
     aggregated = predictions.groupby(['recording_filename', 'segment_onset', 'segment_offset'])[['predicted_label', 'probability']].agg(list).reset_index()
     aggregated = aggregated.rename(columns={'predicted_label': 'predicted_labels', 'probability': 'probabilities'})
-    aggregated['predicted_label'] = aggregated['predicted_labels'].apply(aggregate_labels)
+    aggregated['vcm_type'] = aggregated['predicted_labels'].apply(lambda x: aggregate_labels(x))
     aggregated['speaker_type'] = 'CHI'
 
     # Write files
@@ -121,13 +123,14 @@ def main():
             # Write raw csv file with more information
             filename = f'{Path(recording_filename).stem}_{range_onset}_{range_offset}.csv'
             output_csv = output_folder / 'raw_from_human_timestamps' / filename
-            csv_data = sub_data[['segment_onset', 'segment_offset', 'speaker_type', 'predicted_label', 'predicted_labels', 'probabilities']]
+            csv_data = sub_data[['segment_onset', 'segment_offset', 'speaker_type', 'vcm_type', 'predicted_labels', 'probabilities']]
             csv_data.to_csv(output_csv, sep=',', index=False)
 
             # Write converted csv file in childproject format
             output_csv = output_folder / 'converted_from_human_timestamps' / filename
-            csv_data = sub_data[['segment_onset', 'segment_offset', 'speaker_type', 'predicted_label']]
+            csv_data = sub_data[['segment_onset', 'segment_offset', 'speaker_type', 'vcm_type']]
             csv_data.to_csv(output_csv, sep=',', index=False)
+        print(f"Saved everything to {output_folder} / raw_from_human_timestamps")
     else:
         recording_filenames = am.annotations[am.annotations['set'] == args.set]['recording_filename']
         (output_folder / f'raw_from_{args.set}').mkdir(parents=True, exist_ok=True)
@@ -138,13 +141,15 @@ def main():
             # Write raw csv file with more information
             filename = f'{Path(recording_filename).stem}.csv'
             output_csv = output_folder / f'raw_from_{args.set}' / filename
-            csv_data = sub_data[['segment_onset', 'segment_offset', 'speaker_type', 'predicted_label', 'predicted_labels', 'probabilities']]
+            csv_data = sub_data[['segment_onset', 'segment_offset', 'speaker_type', 'vcm_type', 'predicted_labels', 'probabilities']]
             csv_data.to_csv(output_csv, sep=',', index=False)
 
             # Write converted csv file in childproject format
             output_csv = output_folder / f'converted_from_{args.set}' / filename
-            csv_data = sub_data[['segment_onset', 'segment_offset', 'speaker_type', 'predicted_label']]
+            csv_data = sub_data[['segment_onset', 'segment_offset', 'speaker_type', 'vcm_type']]
             csv_data.to_csv(output_csv, sep=',', index=False)
+        print(f"Saved everything to {output_folder} / raw_from_{args.set}")
+
 
 if __name__ == '__main__':
     main()
