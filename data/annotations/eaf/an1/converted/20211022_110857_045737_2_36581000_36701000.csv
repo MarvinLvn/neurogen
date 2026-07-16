@@ -1,0 +1,6 @@
+segment_onset,segment_offset,speaker_id,speaker_type,vcm_type,lex_type,mwu_type,addressee,transcription,words
+36582407,36582706,FA1,FEM,NA,NA,NA,NA,xxx,1
+36589592,36589922,CHI,CHI,N,NA,NA,NA,xxx,0
+36662067,36662794,CHI,CHI,C,0,NA,NA,xxx,0
+36664299,36666267,CHI,CHI,C,0,NA,NA,xxx,0
+36666292,36666897,CHI,CHI,C,0,NA,NA,xxx,0

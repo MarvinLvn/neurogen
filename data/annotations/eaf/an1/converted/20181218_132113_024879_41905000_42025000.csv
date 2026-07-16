@@ -1,0 +1,8 @@
+segment_onset,segment_offset,speaker_id,speaker_type,vcm_type,lex_type,mwu_type,addressee,transcription,words
+41907221,41909237,FA1,FEM,NA,NA,NA,NA,xxx,10
+41916401,41916870,FA1,FEM,NA,NA,NA,NA,xxx,2
+41917221,41918123,OCHI,OCH,NA,NA,NA,NA,xxx,4
+41957984,41958602,CHI,CHI,N,NA,NA,NA,xxx,0
+41963143,41964406,CHI,CHI,N,NA,NA,NA,xxx,0
+41974324,41974866,CHI,CHI,N,NA,NA,NA,xxx,0
+41999082,41999499,CHI,CHI,N,NA,NA,NA,xxx,0

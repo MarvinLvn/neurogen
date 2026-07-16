@@ -8,6 +8,8 @@ from ChildProject.annotations import AnnotationManager
 from ChildProject.metrics import segments_to_grid, conf_matrix
 from ChildProject.projects import ChildProject
 from tqdm import tqdm
+import warnings
+warnings.filterwarnings("ignore", category=pd.errors.SettingWithCopyWarning)
 
 def main(argv):
     parser = argparse.ArgumentParser(description='')

@@ -1,0 +1,8 @@
+segment_onset,segment_offset,speaker_id,speaker_type,vcm_type,lex_type,mwu_type,addressee,transcription,words
+6837000,6837721,CHI,CHI,N,NA,NA,NA,xxx,0
+6838994,6839623,CHI,CHI,C,W,NA,NA,xxx,0
+6843005,6843793,CHI,CHI,C,W,NA,NA,xxx,0
+6880900,6881690,CHI,CHI,C,0,NA,NA,xxx,0
+6903837,6904470,CHI,CHI,C,0,NA,NA,xxx,0
+6905923,6906721,CHI,CHI,C,0,NA,NA,xxx,0
+6955787,6956508,CHI,CHI,N,NA,NA,NA,xxx,0

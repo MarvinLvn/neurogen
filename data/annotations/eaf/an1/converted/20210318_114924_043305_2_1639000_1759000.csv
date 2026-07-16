@@ -1,0 +1,5 @@
+segment_onset,segment_offset,speaker_id,speaker_type,vcm_type,lex_type,mwu_type,addressee,transcription,words
+1729558,1730151,CHI,CHI,C,0,NA,NA,xxx,0
+1730597,1731499,MA1,MAL,NA,NA,NA,NA,xxx,2
+1733321,1733795,CHI,CHI,C,0,NA,NA,xxx,0
+1734185,1735522,CHI,CHI,N,NA,NA,NA,xxx,0

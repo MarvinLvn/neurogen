@@ -1,0 +1,7 @@
+segment_onset,segment_offset,speaker_id,speaker_type,vcm_type,lex_type,mwu_type,addressee,transcription,words
+2149654,2150156,CHI,CHI,N,NA,NA,NA,xxx,0
+2151340,2153239,OCHI,OCH,NA,NA,NA,NA,xxx,2
+2158605,2159671,OCHI,OCH,NA,NA,NA,NA,xxx,1
+2162325,2164648,OCHI,OCH,NA,NA,NA,NA,xxx,3
+2185689,2186568,OCHI,OCH,NA,NA,NA,NA,xxx,3
+2186953,2187823,FA1,FEM,NA,NA,NA,NA,xxx,3

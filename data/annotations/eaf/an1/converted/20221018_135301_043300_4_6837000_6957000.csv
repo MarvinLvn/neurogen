@@ -1,0 +1,4 @@
+segment_onset,segment_offset,speaker_id,speaker_type,vcm_type,lex_type,mwu_type,addressee,transcription,words
+6841762,6842180,CHI,CHI,N,NA,NA,NA,xxx,0
+6850881,6851412,CHI,CHI,C,0,NA,NA,xxx,0
+6852911,6853586,CHI,CHI,C,0,NA,NA,xxx,0

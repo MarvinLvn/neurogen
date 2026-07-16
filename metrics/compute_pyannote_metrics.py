@@ -10,6 +10,10 @@ from pyannote.core import Timeline, Segment
 from pyannote.metrics.detection import DetectionPrecisionRecallFMeasure
 from pyannote.metrics.identification import IdentificationErrorRate
 from tqdm import tqdm
+import warnings
+
+warnings.filterwarnings("ignore", category=pd.errors.SettingWithCopyWarning)
+warnings.filterwarnings("ignore", message=".*uem.*was approximated.*")
 
 def main(argv):
     parser = argparse.ArgumentParser(description='')

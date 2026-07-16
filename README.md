@@ -1,152 +1,54 @@
-### 0. Get the data
+### 1. Introduction
 
-NeurogenSSD or on oberon:
+We ran [VTC 1.0](https://github.com/MarvinLvn/voice-type-classifier), ALICE (https://github.com/orasanen/ALICE), and VCM (https://github.com/LAAC-LSCP/vcm) and converted all files to .csv using [ChildProject](https://childproject.readthedocs.io/en/latest/).
+This repository contains:
+1) Annotation files for ACLEW, LENA along with human annotations (.csv)
+2) Python code to extract performance metrics (identification error, percentage correct, confusion matrices, etc.) from the .csv files
+3) Python or R code to generate the figures
 
-```
-/scratch1/data/raw_data/neurogen/L3_HIPAA_LENA_cleaned
-```
+### 2. Compute language environment measures
 
-You should have 381 (its, wav) file pairs.
-
-### 1. Applying the ACLEW pipeline
-
-Follow [the instructions to run VTC](https://github.com/MarvinLvn/voice-type-classifier) and place the output in `L3_HIPAA_LENA_cleaned/vtc/raw`.
-
-Follow [the instructions to run ALICE](https://github.com/orasanen/ALICE) and place the resulting `ALICE_output.txt` and `diarization_output.rttm` files in `L3_HIPAA_LENA_cleaned/alice/raw`.
-
-Follow [the instructions to run VCM](https://github.com/LAAC-LSCP/vcm) and place the resulting '*.vcm' files in `L3_HIPAA_LENA_cleaned/vcm/raw`.
-
-Similarly, LENA output files (.its) are expected to be in `L3_HIPAA_LENA_cleaned/its/raw`
-
-### 2. Converting automatic annotations to csv
+The folder `measures_files` contains language environment measures (e.g., AWC, CVC, CTC) that need to be extracted using ChildProject. 
+You can extract them for our three systems (LENA, ACLEW, human) only for human-annotated regions using the following commands:
 
 ```sh
-# .its --> .csv (lena)
-python utils/convert_anno.py --data_path L3_HIPAA_LENA_cleaned/annotations/its/raw --algo lena
-# .rttm --> .csv (vtc)
-python utils/convert_anno.py --data_path L3_HIPAA_LENA_cleaned/annotations/vtc/raw --algo vtc
-# .txt --> .csv (alice)
-python utils/convert_anno.py --data_path L3_HIPAA_LENA_cleaned/annotations/alice/utterance_files --algo alice
-# .vcm --> .csv (vcm)
-python utils/convert_anno.py --data_path L3_HIPAA_LENA_cleaned/annotations/vcm/raw --algo vcm
+python metrics/compute_standard_measures.py --data_path data --measures_file measures_files/custom_human_chunks.csv --output data/measures/human_measures_chunks.csv --only_human_annotated
+python metrics/compute_standard_measures.py --data_path data --measures_file measures_files/custom_lena_chunks.csv --output data/measures/lena_measures_chunks.csv --only_human_annotated
+python metrics/compute_standard_measures.py --data_path data --measures_file measures_files/custom_aclew_chunks.csv --output data/measures/aclew_measures_chunks.csv --only_human_annotated
 ```
 
-### 3. Create metadata (for compatibility with ChildProject)
+These will create three files into the `data/measures` folder containing the language environment measures that we will use to compute performance metrics of our two algorithms.
+
+### 3. Compute LENA and ACLEW performance metrics
+
+Precision, recall, and fscore can be computed using: 
 
 ```sh
-python utils/create_metadata.py --data_path L3_HIPAA_LENA_cleaned
+# LENA vs human
+python metrics/compute_pyannote_metrics.py --data_path data --hyp its --ref eaf/an1 --metric fscore
+# ACLEW vs human
+python metrics/compute_pyannote_metrics.py --data_path data --hyp vtc --ref eaf/an1 --metric fscore
 ```
 
-### 4. Compute confusion matrices between LENA & VTC (group level)
+These will create two files `results/pyannote_metrics/its_eaf_an1/fscore_30mn_clips.csv` and `results/pyannote_metrics/vtc_eaf_an1/fscore_30mn_clips.csv`.
+
+Next, let's compute confusion matrices using:
 
 ```sh
-python metrics/compute_confusion.py --data_path L3_HIPAA_LENA_cleaned --set1 vtc --set2 its
+# LENA vs human
+python metrics/compute_confusion.py --data_path data --set1 its --set2 eaf/an1
+# ACLEW vs human
+python metrics/compute_confusion.py --data_path data --set1 vtc --set2 eaf/an1
 ```
 
-This will generate `.npy` files for each group in the `results` folder.
+These will create confusion matrices in the `results/conf/its_eaf_an1` and the `results/conf/vtc_eaf_an1` folders. 
 
-### 5. Compute Cohen's kappa between LENA & VTC (file level)
-
-```sh
-python metrics/compute_agreement.py --data_path L3_HIPAA_LENA_cleaned --set1 vtc --set2 its
-```
-
-### 6. Compute metrics
-
-For LENA:
-
-```sh
-python metrics/compute_standard_measures.py --data_path L3_HIPAA_LENA_cleaned --measures_file measure_files/custom_lena.csv --output lena_metrics.csv
-```
-
-For the ACLEW pipeline:
-
-```sh
-python metrics/compute_standard_measures.py --data_path L3_HIPAA_LENA_cleaned --measures_file measure_files/custom_aclew.csv --output aclew_metrics.csv
-```
-
-# Comparison to human annotations
-
-### 1. Download .eaf files (from box) and place them in `L3_HIPAA_LENA_cleaned/annotations/eaf/an1/raw`
-
-### 2. Update annotations.csv with human-annotated files using the following command:
-
-```sh
-python utils/add_gold_to_annotations.py \
-  --data_path data/L3_HIPAA_LENA_cleaned/annotations/eaf/an1/raw \
-  --annotations_csv_path data/L3_HIPAA_LENA_cleaned/metadata/annotations.csv
-```
-
-This will create a file `data/L3_HIPAA_LENA_cleaned/metadata/annotations2.csv`. 
-After reviewing it, you can remove `annotations.csv` and replace it by this new file.
-
-### (2.5) Update annotations.csv with VCM files using the following command (only if not already done):
+Finally, we can compute identification error rate and percentage correct:
 
 ```shell
-python utils/add_vcm_to_annotations.py \
-  --data_path  data/L3_HIPAA_LENA_cleaned/annotations/vcm/raw \
-  --annotations_csv_path  data/L3_HIPAA_LENA_cleaned/metadata/annotations.csv
+python metrics/compute_pyannote_metrics.py --data_path data --hyp its --ref eaf/an1 --metric ider --two_mn_clip_level
+python metrics/compute_pyannote_metrics.py --data_path data --hyp vtc --ref eaf/an1 --metric ider --two_mn_clip_level
 ```
 
-Again this will create a file `annotations2.csv` that you can rename `annotations.csv` after reviewing it.
-
-### 3. Convert `.eaf` to `.csv`:
-
-```sh
-python utils/convert_anno.py --data_path data/L3_HIPAA_LENA_cleaned/annotations/eaf/an1/raw --algo eaf
-```
-
-### 4. Compute standard measures from human annotations files
-
-```sh
-# Extract human metrics from the 2-mn chunks
-python metrics/compute_standard_measures.py --data_path data/L3_HIPAA_LENA_cleaned --measures_file measures_files/custom_human_chunks.csv --output human_measures_chunks.csv --only_human_annotated
-# Extract the same metrics from LENA
-python metrics/compute_standard_measures.py --data_path data/L3_HIPAA_LENA_cleaned --measures_file measures_files/custom_lena_chunks.csv --output lena_measures_chunks.csv --only_human_annotated
-# Extract the same metrics from ACLEW
-python metrics/compute_standard_measures.py --data_path data/L3_HIPAA_LENA_cleaned --measures_file measures_files/custom_aclew_chunks.csv --output aclew_measures_chunks.csv --only_human_annotated
-```
-
-### 5. Compute precision, recall, and fscore
-
-```sh
-# For LENA
-python metrics/compute_pyannote_metrics.py --data_path data/L3_HIPAA_LENA_cleaned --hyp its --ref eaf/an1 --metric fscore
-# For VTC
-python metrics/compute_pyannote_metrics.py --data_path data/L3_HIPAA_LENA_cleaned --hyp vtc --ref eaf/an1 --metric fscore
-```
-
-### 7. Compute confusion matrices 
-
-```sh
-# Between lena and human
-python metrics/compute_confusion.py --data_path data/L3_HIPAA_LENA_cleaned --set1 its --set2 eaf/an1
-# Between vtc and human
-python metrics/compute_confusion.py --data_path data/L3_HIPAA_LENA_cleaned --set1 vtc --set2 eaf/an1
-```
-
-### 8. Compute kappa
-
-```shell
-# Compute Kappa between VTC and human over 2-mn human-annotated chunks
-python metrics/compute_agreement.py --data_path data/L3_HIPAA_LENA_cleaned --set1 vtc --set2 eaf/an1 --two_mn_clip_level
-# between LENA and human
-python metrics/compute_agreement.py --data_path data/L3_HIPAA_LENA_cleaned --set1 its --set2 eaf/an1 --two_mn_clip_level
-```
-
-### 9. Compute identification error rate and percentage correct
-
-```shell
-python metrics/compute_pyannote_metrics.py --data_path data/L3_HIPAA_LENA_cleaned --hyp its --ref eaf/an1 --metric ider --two_mn_clip_level
-python metrics/compute_pyannote_metrics.py --data_path data/L3_HIPAA_LENA_cleaned --hyp vtc --ref eaf/an1 --metric ider --two_mn_clip_level
-```
-### 10. Add pitch measures
-
-```shell
-# For human
-python utils/add_pitch_to_measures.py --annotation_folder data/L3_HIPAA_LENA_cleaned/annotations/eaf/an1/converted --audio_folder data/L3_HIPAA_LENA_cleaned/annotations/eaf/an1/raw/audio_chunks --measures_path human_measures_chunks.csv
-# For ACLEW
-python utils/add_pitch_to_measures.py --annotation_folder data/L3_HIPAA_LENA_cleaned/annotations/vcm/converted --audio_folder data/L3_HIPAA_LENA_cleaned/annotations/eaf/an1/raw/audio_chunks --measures_path aclew_measures_chunks.csv --automatic
-# For LENA
-python utils/add_pitch_to_measures.py --annotation_folder data/L3_HIPAA_LENA_cleaned/annotations/its/converted --audio_folder data/L3_HIPAA_LENA_cleaned/annotations/eaf/an1/raw/audio_chunks --measures_path lena_measures_chunks.csv --automatic
-```
+These will create two files `results/pyannote_metrics/its_eaf_an1/ider_30mn_clips.csv` (for performance metrics computed on the megaclip) and `results/pyannote_metrics/its_eaf_an1/ider_2mn_clips.csv` (for performance metrics at the 2-min clip level).
+Similarly for ACLEW, these will create two files `results/pyannote_metrics/vtc_eaf_an1/ider_30mn_clips.csv` and `results/pyannote_metrics/vtc_eaf_an1/ider_2mn_clips.csv`

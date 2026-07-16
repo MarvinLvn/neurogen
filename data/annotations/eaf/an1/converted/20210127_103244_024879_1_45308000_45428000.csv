@@ -1,0 +1,5 @@
+segment_onset,segment_offset,speaker_id,speaker_type,vcm_type,lex_type,mwu_type,addressee,transcription,words
+45313803,45314221,MA1,MAL,NA,NA,NA,NA,xxx,1
+45315242,45315541,MA1,MAL,NA,NA,NA,NA,xxx,1
+45380185,45380463,CHI,CHI,N,NA,NA,NA,xxx,0
+45407257,45407515,CHI,CHI,N,NA,NA,NA,xxx,0

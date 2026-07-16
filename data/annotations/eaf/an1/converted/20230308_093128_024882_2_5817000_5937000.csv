@@ -1,0 +1,6 @@
+segment_onset,segment_offset,speaker_id,speaker_type,vcm_type,lex_type,mwu_type,addressee,transcription,words
+5854963,5855278,CHI,CHI,N,NA,NA,NA,xxx,0
+5856491,5857630,CHI,CHI,N,NA,NA,NA,xxx,0
+5862417,5862659,CHI,CHI,N,NA,NA,NA,xxx,0
+5878844,5879763,CHI,CHI,C,0,NA,NA,xxx,0
+5880680,5880962,MA1,MAL,NA,NA,NA,NA,xxx,1
