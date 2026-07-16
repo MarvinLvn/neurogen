@@ -1,10 +1,53 @@
-### 1. Introduction
+#  Performance and Biases of the LENA and ACLEW Algorithms in Analyzing Language Environments in Down, Fragile X, Angelman Syndromes, and Populations at Elevated Likelihood for Autism 
 
-We ran [VTC 1.0](https://github.com/MarvinLvn/voice-type-classifier), ALICE (https://github.com/orasanen/ALICE), and VCM (https://github.com/LAAC-LSCP/vcm) and converted all files to .csv using [ChildProject](https://childproject.readthedocs.io/en/latest/).
-This repository contains:
-1) Annotation files for ACLEW, LENA along with human annotations (.csv)
-2) Python code to extract performance metrics (identification error, percentage correct, confusion matrices, etc.) from the .csv files
-3) Python or R code to generate the figures
+Code and anonymized data accompanying:
+
+> Lavechin M, Hamrick LR, Kelleher B, Seidl A. Performance and Biases of the LENA and ACLEW
+> Algorithms in Analyzing Language Environments in Down, Fragile X, Angelman Syndromes, and
+> Populations at Elevated Likelihood for Autism. *Dev Sci*. 2026 Sep;29(5):e70239.
+> doi: [10.1111/desc.70239](https://doi.org/10.1111/desc.70239).
+> PMID: 42417178; PMCID: PMC13343393.
+
+This repository validates and compares two automated language-environment analysis
+algorithms — the proprietary **LENA®** system and the open-source **ACLEW** pipeline
+(VTC + ALICE + VCM) — against human annotations from 50 age-matched 2-year-olds across
+five diagnostic groups (low-risk controls, Down syndrome, Fragile X syndrome, Angelman
+syndrome, and siblings of children with autism). It contains:
+
+1. Anonymized, per-clip annotation transcripts for LENA, ACLEW (VTC/ALICE/VCM), and human
+   annotation (`data/annotations/`), plus de-identified recording/child metadata
+   (`data/metadata/`).
+2. Python code to extract language-environment measures (CTC, AWC, CVC) and performance
+   metrics (identification error rate, percentage correct, confusion matrices) from those
+   transcripts (`metrics/`, `utils/`).
+3. Analysis code reproducing the paper's tables and figures (`analysis/`).
+
+Performance metrics reported in the paper are also available in tabular format at
+https://doi.org/10.17605/OSF.IO/5QE4M.
+
+### 1. Reproducing analyses
+
+This repository already contains all the data needed to reproduce the figures/tables of the paper.
+
+Notebooks used to produce the paper's tables and figures:
+
+| Notebook | Produces |
+|---|---|
+| `metrics/[HUMAN] Summary statistics.ipynb` | Table 4 and 5 |
+| `metrics/[BIASES SEGMENTATION] 2-mn clips.ipynb` | Table 6 |
+| `metrics/[BIASES MEASURES] 2-mn clips.ipynb` | Table 7 |
+| `metrics/[PERFORMANCE PREDICTORS] 30-min clips.ipynb` | Table 8 |
+| `metrics/[SEGMENTATION] Confusion matrices.ipynb` | Figure 3 |
+| `metrics/[MEASURES] 30-mn metrics.ipynb` | Figure 4 and 5 |
+| `metrics/[ANNOTATION] How much.ipynb` | Supplementary Figure 1 |
+
+Companion analyses at the other clip resolution, kept for reference:
+
+- `metrics/[BIASES SEGMENTATION] 30-mn clips.ipynb`
+- `metrics/[MEASURES] 2-mn metrics.ipynb`
+- `metrics/[SEGMENTATION] 2-mn metrics.ipynb` / `[SEGMENTATION] 30-mn metrics.ipynb`
+- 
+If you want to go further and recompute language environments measures and performance metrics, you can follow instructions in Section 2. and 3. 
 
 ### 2. Compute language environment measures
 
