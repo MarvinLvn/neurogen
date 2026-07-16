@@ -29,23 +29,23 @@ https://doi.org/10.17605/OSF.IO/5QE4M.
 
 This repository already contains all the data needed to reproduce the figures/tables of the paper.
 
-Notebooks used to produce the paper's tables and figures:
+Notebooks used to produce the paper's tables and figures can be found in `analysis/metrics`:
 
 | Notebook | Produces |
 |---|---|
-| `metrics/[HUMAN] Summary statistics.ipynb` | Table 4 and 5 |
-| `metrics/[BIASES SEGMENTATION] 2-mn clips.ipynb` | Table 6 |
-| `metrics/[BIASES MEASURES] 2-mn clips.ipynb` | Table 7 |
-| `metrics/[PERFORMANCE PREDICTORS] 30-min clips.ipynb` | Table 8 |
-| `metrics/[SEGMENTATION] Confusion matrices.ipynb` | Figure 3 |
-| `metrics/[MEASURES] 30-mn metrics.ipynb` | Figure 4 and 5 |
-| `metrics/[ANNOTATION] How much.ipynb` | Supplementary Figure 1 |
+| `[HUMAN] Summary statistics.ipynb` | Table 4 and 5 |
+| `[BIASES SEGMENTATION] 2-mn clips.ipynb` | Table 6 |
+| `[BIASES MEASURES] 2-mn clips.ipynb` | Table 7 |
+| `[PERFORMANCE PREDICTORS] 30-min clips.ipynb` | Table 8 |
+| `[SEGMENTATION] Confusion matrices.ipynb` | Figure 3 |
+| `[MEASURES] 30-mn metrics.ipynb` | Figure 4 and 5 |
+| `[ANNOTATION] How much.ipynb` | Supplementary Figure 1 |
 
 Companion analyses at the other clip resolution, kept for reference:
 
-- `metrics/[BIASES SEGMENTATION] 30-mn clips.ipynb`
-- `metrics/[MEASURES] 2-mn metrics.ipynb`
-- `metrics/[SEGMENTATION] 2-mn metrics.ipynb` / `[SEGMENTATION] 30-mn metrics.ipynb`
+- `[BIASES SEGMENTATION] 30-mn clips.ipynb`
+- `[MEASURES] 2-mn metrics.ipynb`
+- `[SEGMENTATION] 2-mn metrics.ipynb` / `[SEGMENTATION] 30-mn metrics.ipynb`
 - 
 If you want to go further and recompute language environments measures and performance metrics, you can follow instructions in Section 2. and 3. 
 
