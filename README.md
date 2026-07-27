@@ -46,7 +46,7 @@ Companion analyses at the other clip resolution, kept for reference:
 - `[BIASES SEGMENTATION] 30-mn clips.ipynb`
 - `[MEASURES] 2-mn metrics.ipynb`
 - `[SEGMENTATION] 2-mn metrics.ipynb` / `[SEGMENTATION] 30-mn metrics.ipynb`
-- 
+
 If you want to go further and recompute language environments measures and performance metrics, you can follow instructions in Section 2. and 3. 
 
 ### 2. Compute language environment measures
